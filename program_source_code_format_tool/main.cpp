@@ -40,7 +40,6 @@ using namespace std;
 int main()
 {
 	IWindow* window = new IWindow("Test Window",900,700);
-	window->createButton(200,200,100,40,"Click Me");
 	
     while (true)
     {

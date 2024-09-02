@@ -34,6 +34,8 @@ public:
         initgraph(width, height);
         HWND hwnd = GetHWnd();  // 获取窗口句柄
         SetWindowText(hwnd, title.c_str());
+        createSelectFileButton();
+        createMsgText("点击按钮选择文件");
 //        floodfill(0, 0, WHITE);
     }
 
@@ -56,10 +58,23 @@ public:
         }	
 	}
 	
+	void createMsgText(const std::string& msg)
+	{
+		int y = height - 70;
+		setfillcolor(LIGHTGRAY);
+	    fillrectangle(0, height - 70, width, height);
+	    
+//	    setbkmode(TRANSPARENT);
+	    setfillcolor(LIGHTGRAY);
+	    RECT r = {0, height - 70, width, height};
+	    drawtext(msg.c_str(), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	}
+	
 	void selectFile(void*)
 	{
-		cout<<"run select"<<OpenFileDialog(NULL);
-		
+		std::string text = "当前选择的文件为："; 
+		std::string filePath = OpenFileDialog(NULL);
+		createMsgText(text + filePath);	
 	}
 	
 	bool isPointInRect(int x, int y, RECT rect)
@@ -67,19 +82,26 @@ public:
 	    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
 	}
 	
-	void createButton(int x,int y,int width, int height,std::string text)
+	void createSelectFileButton()
 	{
+		int buttonWidth = 150;
+		int buttonHeight = 70;
+		std::string text = "读取文件"; 
+	    int x = (width - buttonWidth) / 2;
+    	int y = (height - buttonHeight) / 2;
 		// 绘制按钮的背景
 	    setfillcolor(LIGHTGRAY);
-	    fillrectangle(x, y, x + width, y + height);
+	    fillrectangle(x, y, x + buttonWidth, y + buttonHeight);
 	
 	    // 绘制按钮的边框
 	    setlinecolor(WHITE);
-	    rectangle(x, y, x + width, y + height);
+	    rectangle(x, y, x + buttonWidth, y + buttonHeight);
 	
 	    // 输出文本
+	    
 	    setfillcolor(LIGHTGRAY);
-	    RECT r = { x, y, x + width, y + height };
+	    setbkmode(TRANSPARENT);
+	    RECT r = { x, y, x + buttonWidth, y + buttonHeight };
 	    drawtext(text.c_str(), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	    UiComponentConfig buttonConfig;
 	    buttonConfig.rect = r;
