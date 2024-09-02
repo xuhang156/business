@@ -9,10 +9,11 @@
 #include "../data_structure/MyList.h"
 using namespace std;
 
-typedef void (*EventHandle)(void *);
+class IWindow;
+typedef void (IWindow::*EventHandle)(void *);
 
 //调用window底层的对话框来选择一个c++文件，目前主要过滤有.h、.cpp、.c三种类型文件 
-void OpenFileDialog(void*); 
+std::string OpenFileDialog(void*); 
 
 /*
 定义ui组件（主要是按钮）配置结构体，包括:
@@ -47,12 +48,18 @@ public:
 				if (isPointInRect(msg.x,msg.y,node->data.rect))
             	{
             		cout<<"click button";
-            		node->data.handle(NULL);
+            		(this->*node->data.handle)(NULL);
             		return;
             	}
 		        node = node->next;  // 移动到下一个节点
 		    }
         }	
+	}
+	
+	void selectFile(void*)
+	{
+		cout<<"run select"<<OpenFileDialog(NULL);
+		
 	}
 	
 	bool isPointInRect(int x, int y, RECT rect)
@@ -76,7 +83,7 @@ public:
 	    drawtext(text.c_str(), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	    UiComponentConfig buttonConfig;
 	    buttonConfig.rect = r;
-	    buttonConfig.handle = OpenFileDialog;
+	    buttonConfig.handle = &IWindow::selectFile;
 	    components.insert(buttonConfig);
 	}
 	

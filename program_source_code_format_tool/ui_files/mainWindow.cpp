@@ -11,7 +11,7 @@
 //	
 //}
 
-void OpenFileDialog(void*) {
+std::string OpenFileDialog(void*) {
     // 创建一个结构体来保存文件选择对话框的信息
     OPENFILENAME ofn;       		// 文件选择对话框结构体
     char szFile[260] = { 0 };  		// 保存选择的文件名
@@ -32,7 +32,9 @@ void OpenFileDialog(void*) {
     // 显示文件选择对话框
     if (GetOpenFileName(&ofn)) {
         std::cout << "Selected file: " << ofn.lpstrFile << std::endl;
+        return ofn.lpstrFile;
     } else {
+    	return "";
         std::cout << "No file selected or operation canceled." << std::endl;
     }
 }
