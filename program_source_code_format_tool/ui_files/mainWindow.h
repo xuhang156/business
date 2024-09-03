@@ -17,6 +17,9 @@ typedef void (MainWindow::*EventHandle)(void *);
 //调用window底层的对话框来选择一个c++文件，目前主要过滤有.h、.cpp、.c三种类型文件 
 std::string OpenFileDialog(void*); 
 
+//读取文件内容 
+MyList<std::string> readFile(const std::string& filePath);
+
 /*
 定义ui组件（主要是按钮）配置结构体，包括:
 Rect rect: 组件的位置信息，包括x,y,width,height，x,y表示左上角坐标值
@@ -43,6 +46,8 @@ class MainWindow
 public:
 	MainWindow(const std::string& title, int width, int height);
 	~MainWindow();
+	
+	void showCode(const std::string& filePath);
 	//鼠标时间处理函数 
 	void runEvent(const MOUSEMSG& msg)
 	{

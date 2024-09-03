@@ -1,3 +1,6 @@
+
+#include <fstream>
+
 #include "mainWindow.h"
 #include "operationButtonWindow.h"
 
@@ -26,18 +29,61 @@ void MainWindow::selectFile(void*)
 	std::string text = "当前选择的文件为："; 
 	std::string filePath = OpenFileDialog(NULL);
 	createMsgText(text + filePath);	
-	if(filePath != "" && !hadCreateButton)
+	
+	if(filePath != "")
 	{
-		operationButtons->create();
-		hadCreateButton = true;
-		hideSelectFileButton();
+		if(!hadCreateButton) 
+		{
+			operationButtons->create();
+			hadCreateButton = true;
+			hideSelectFileButton();
+		}
+		showCode(filePath);
+		return;
 	}
+	createMsgText("未选择文件，请重新选择文件。");
+	
+}
+
+void MainWindow::showCode(const std::string& filePath)
+{
+	// 读取文件内容
+	MyList<std::string> fileDatas = readFile(filePath);
+	fileDatas.display();
+	
+	int i = 0;
+	MyList<std::string>::Node* node = fileDatas.beginNode();  // 从头部节点开始
+	while (node != NULL) {
+		int lineHeight = 15;
+		outtextxy(10, i * lineHeight, node->data.c_str());
+		i++;
+		node = node->next;  // 移动到下一个节点
+	}
+    // 设置文本样式
+    
 }
 
 //MainWindow::~MainWindow()
 //{
 //	
 //}
+
+MyList<std::string> readFile(const std::string& filePath) {
+    std::ifstream file(filePath.c_str());
+    MyList<std::string> lines;
+    std::string line;
+    
+    if (file.is_open()) {
+        while (std::getline(file, line)) {
+            lines.insert(line);
+        }
+        file.close();
+    } else {
+        MessageBox(NULL, "Unable to open file!", "Error", MB_OK);
+    }
+
+    return lines;
+}
 
 std::string OpenFileDialog(void*) {
     // 创建一个结构体来保存文件选择对话框的信息
