@@ -36,7 +36,7 @@ public:
             current = nextNode;
         }
     }
-
+	
     void insert(T value) {
         Node* newNode = new Node(value);
         if (head == NULL) {
@@ -81,7 +81,7 @@ public:
     void display() const {
         Node* current = head;
         while (current != NULL) {
-            std::cout << current->data << " -> ";
+            std::cout << current->data << ""<<std::endl;
             current = current->next;
         }
         std::cout << "nullptr" << std::endl;
