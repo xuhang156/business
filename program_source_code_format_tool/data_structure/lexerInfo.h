@@ -87,6 +87,7 @@ struct Token
 {
 	std::string value;
     enum TokenType type;
+    std::string description();
 };
 
 std::ostream& operator<<(std::ostream& os, const Token& token);
@@ -97,8 +98,6 @@ bool check_isalpha(char c);
 bool isOperator(char value); 
 void initOperators();
 void initKeywords();
-
-
 
 // 词法分析器
 class Lexer {
@@ -113,6 +112,10 @@ public:
             if (std::isspace(src[index])) {
                 ++index;
             }
+            // 处理预处理指令
+        	else if (src[index] == '#') {
+            	skipPreprocessorDirective();
+	        }
             else if (check_isalpha(src[index])) {
                 tokens.insert(identifierOrKeyword());
             }
@@ -124,17 +127,25 @@ public:
                 tokens.insert(tt);
                 cout<<"查询到数据："<<tt.value<<tt.type<< endl;
             }
-//            else if (delimiters.find(std::string(1, src[index])) != delimiters.end()) {
-//                tokens.insert(delimiterToken());
-//            }
-//            else {
-//            	Token token = { TokenType::ERROR_TOKEN, std::string(1, src[index]) };
+            else {
+            	Token token = {std::string(1, src[index]),ERROR_TOKEN};
 //                tokens.insert(token);
-//                ++index;
-//            }
+                ++index;
+            }
         }
         return tokens;
     }
+    
+    void skipPreprocessorDirective() {
+    	// 跳过整个预处理指令直到换行符
+    	while (index < src.size() && src[index] != '\n') {
+	        ++index;
+    	}
+    	// 跳过换行符
+    	if (index < src.size() && src[index] == '\n') {
+        	++index;
+	    }
+	}
 
 private:
     std::string src;
@@ -153,11 +164,13 @@ private:
 			if(node->data.value == value)
 			{
 				token.type = node->data.type;
+				cout<<"插入关键字："<<token<<endl;
 				return token;
 			}	
 			node = node->next;  // 移动到下一个节点
 		}
 		
+		cout<<"默认返回关键字："<<token<<endl;
 	    return token; // 返回标识符 Token
 	}
 
@@ -175,9 +188,10 @@ private:
             ++index;
         }
         std::string value = src.substr(start, index - start);
-        cout<<"获取到数字："<<value<<endl;
         if (hasDot) {
-            return { value, hasE ? DOUBLE_CONST : FLOAT_CONST };
+        	Token token = { value, hasE ? DOUBLE_CONST : FLOAT_CONST };
+        	cout<<"获取到数字："<<token<<endl;
+            return token;
         }
         return { value, INT_CONST };
     }
@@ -196,10 +210,10 @@ private:
 	    MyList<Token>::Node* node = operators.beginNode();  // 从头部节点开始
 		while (node != NULL) {
 			bool same = node->data.value == value;
-			cout<<"对比："<< node->data.value<<": "<<value<<" "<<same<<endl;
 			if(node->data.value == value)
 			{
 				token.type = node->data.type;
+				cout<<"获取到操作符："<<token<<endl;
 				return token;
 			}	
 			node = node->next;  // 移动到下一个节点

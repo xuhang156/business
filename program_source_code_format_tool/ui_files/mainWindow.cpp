@@ -3,10 +3,12 @@
 
 #include "mainWindow.h"
 #include "operationButtonWindow.h"
+#include "../data_structure/lexerInfo.h"
 
 MainWindow::MainWindow(const std::string& title, int width, int height): title(title), width(width), height(height)
 {
     initgraph(width, height);
+    msgAreaTop = height - 70; 
     HWND hwnd = GetHWnd();  // 获取窗口句柄
     SetWindowText(hwnd, title.c_str());
     createSelectFileButton();
@@ -45,22 +47,54 @@ void MainWindow::selectFile(void*)
 	
 }
 
+//清除代码主要显示区域 
+void MainWindow::clearMainPlotArea()
+{
+	setfillcolor(BLACK);
+	fillrectangle(0, 0, operationButtons->borderLeft(), msgAreaTop);
+}
+
+void MainWindow::lexer(void *)
+{
+	cout<<"词法分析程序"; 
+	if(fileStringData == "")
+		return;
+	cout<<"kaishi词法分析程序";
+	Lexer er(fileStringData);
+	auto tokens = er.tokenize();
+	tokens.display();
+	
+	MyList<Token>::Node* node = tokens.beginNode();  // 从头部节点开始
+	int i = 0;
+	clearMainPlotArea();
+	while (node != NULL) {
+		int lineHeight = 15;
+		cout<<"获取此分析："<<node->data.description();
+		outtextxy(10, i * lineHeight, node->data.description().c_str());
+		i++;
+		node = node->next;  // 移动到下一个节点
+	}
+	cout<<"分析结束:"<<i <<endl; 
+}
+
 void MainWindow::showCode(const std::string& filePath)
 {
+	fileStringData = "";
 	// 读取文件内容
 	MyList<std::string> fileDatas = readFile(filePath);
 	fileDatas.display();
 	
 	int i = 0;
 	MyList<std::string>::Node* node = fileDatas.beginNode();  // 从头部节点开始
+	clearMainPlotArea();
 	while (node != NULL) {
 		int lineHeight = 15;
 		outtextxy(10, i * lineHeight, node->data.c_str());
 		i++;
+		fileStringData += node->data;
+		fileStringData += '\n';
 		node = node->next;  // 移动到下一个节点
 	}
-    // 设置文本样式
-    
 }
 
 //MainWindow::~MainWindow()

@@ -29,7 +29,7 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=1
 CompilerSettings=0000000000000000001000000
-UnitCount=6
+UnitCount=8
 
 [VersionInfo]
 Major=1
@@ -104,6 +104,26 @@ BuildCmd=
 FileName=ui_files\operationButtonWindow.h
 CompileCpp=1
 Folder=ui_files
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit7]
+FileName=data_structure\lexerInfo.h
+CompileCpp=1
+Folder=data_structure
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit8]
+FileName=data_structure\lexerInfo.cpp
+CompileCpp=1
+Folder=data_structure
 Compile=1
 Link=1
 Priority=1000

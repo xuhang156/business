@@ -20,6 +20,11 @@ public:
     	return parent == NULL;
 	}
 	
+	int borderLeft()
+	{
+		return x;
+	}
+	
 	void create()
 	{
 		setRegionalBackground();
@@ -96,7 +101,7 @@ public:
 	    RECT buttonBorder = createButton("´Ê·¨·ÖÎö");
 	    UiComponentConfig buttonConfig;
 	    buttonConfig.rect = buttonBorder;
-	    buttonConfig.handle = &MainWindow::doBack;
+	    buttonConfig.handle = &MainWindow::lexer;
 	    parent->addSubclassButton(buttonConfig);
 	}
 	

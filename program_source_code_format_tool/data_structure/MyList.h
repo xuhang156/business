@@ -84,6 +84,5 @@ public:
             std::cout << current->data << ""<<std::endl;
             current = current->next;
         }
-        std::cout << "nullptr" << std::endl;
     }
 };

@@ -84,18 +84,18 @@ public:
 	
 	void createMsgText(const std::string& msg)
 	{
-		int y = height - 70;
 		setfillcolor(LIGHTGRAY);
-	    fillrectangle(0, height - 70, width, height);
+	    fillrectangle(0,msgAreaTop, width, height);
 	    
 //	    setbkmode(TRANSPARENT);
 	    setfillcolor(LIGHTGRAY);
-	    RECT r = {0, height - 70, width, height};
+	    RECT r = {0, msgAreaTop, width, height};
 	    drawtext(msg.c_str(), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
 	
 	void selectFile(void*);
-	
+	void lexer(void *);	//词法分析按钮处理函数 
+	void clearMainPlotArea();
 	bool isPointInRect(int x, int y, RECT rect)
 	{
 	    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
@@ -149,7 +149,10 @@ private:
     std::string title;
     int width;
     int height;
+    
+    int msgAreaTop;		//日志显示区域的高度 
     MyList<UiComponentConfig> components;
     UiComponentConfig selectFileButton;
     OperationButtionWindow* operationButtons;
+    std::string fileStringData;  //加载文件的数据 
 };

@@ -10,6 +10,144 @@ std::ostream& operator<<(std::ostream& os, const Token& token) {
     return os;
 }
 
+std::string Token::description()
+{
+	std::string text = "";
+    switch (type) {
+    	case ERROR_TOKEN:
+            return "错误 Token: " + value;
+        case AUTO_TOKEN:
+        case BREAK_TOKEN:
+        case CASE_TOKEN:
+        case CHAR_TOKEN:
+        case CONST_TOKEN:
+        case CONTINUE_TOKEN:
+        case DEFAULT_TOKEN:
+        case DO_TOKEN:
+        case DOUBLE_TOKEN:
+        case ELSE_TOKEN:
+        case ENUM_TOKEN:
+        case EXTERN_TOKEN:
+        case FLOAT_TOKEN:
+        case FOR_TOKEN:
+        case GOTO_TOKEN:
+        case IF_TOKEN:
+        case INLINE_TOKEN:
+        case INT_TOKEN:
+        case LONG_TOKEN:
+        case REGISTER_TOKEN:
+        case RESTRICT_TOKEN:
+        case RETURN_TOKEN:
+        case SHORT_TOKEN:
+        case SIGNED_TOKEN:
+        case SIZEOF_TOKEN:
+        case STATIC_TOKEN:
+        case STRUCT_TOKEN:
+        case SWITCH_TOKEN:
+        case TYPEDEF_TOKEN:
+        case UNION_TOKEN:
+        case UNSIGNED_TOKEN:
+        case VOID_TOKEN:
+        case VOLATILE_TOKEN:
+        case WHILE_TOKEN:
+        case _ALIGNAS_TOKEN:
+        case _ALIGNOF_TOKEN:
+        case _ATOMIC_TOKEN:
+        case _BOOL_TOKEN:
+        case _COMPLEX_TOKEN:
+        case _GENERIC_TOKEN:
+        case _IMAGINARY_TOKEN:
+        case _NORETURN_TOKEN:
+        case _STATIC_ASSERT_TOKEN:
+        case _THREAD_LOCAL_TOKEN:
+            text = "关键字:     	";
+            break;
+        case IDENT:
+            text = "标识符:     	";
+            break;
+        case INT_CONST:
+            text = "整数常量:   	";
+            break;
+        case DOUBLE_CONST:
+            text = "双精度浮点常量: ";
+            break;
+        case FLOAT_CONST:
+            text = "单精度浮点常量: ";
+            break;
+        case LONG_DOUBLE_CONST:
+            text = "长双精度浮点常量:";
+            break;
+        case CHAR_CONST:
+        	text = "字符常量: 		";
+        	break;
+        case STRING_CONST:
+            text = "字符串常量: 	";
+            break;
+        case ASSIGN:
+            text = "赋值运算符: 	";
+            break;
+        case PLUS:
+            text = "加法运算符: 	";
+            break;
+        case PLUSPLUS:
+            text = "自增运算符: 	";
+            break;
+        case MINUS:
+            text = "减法运算符: 	";
+            break;
+        case MINUSMINUS:
+            text = "自减运算符: 	";
+            break;
+        case MULTIPLY:
+            text = "乘法运算符: 	";
+            break;
+        case DIVIDE:
+            text = "除法运算符: 	";
+            break;
+        case MOD:
+            text = "取模运算符: 	";
+            break;
+        case COMPARISON:
+            text = "比较运算符: 	";
+            break;
+        case AND:
+            text = "逻辑与运算符: 	";
+            break;
+        case OR:
+            text = "逻辑或运算符: 	";
+            break;
+        case LP:
+            text = "左括号: 		";
+            break;
+        case RP:
+            text = "右括号: 		";
+            break;
+        case LBT:
+            text = "左中括号: 		";
+            break;
+        case RBT:
+            text = "右中括号: 		";
+            break;
+        case LBS:
+            text = "左花括号: 		";
+            break;
+        case RBS:
+            text = "右花括号: 		";
+            break;
+        case SEMI:
+            text = "分号: 			";
+            break;
+        case COMMA:
+            text = "逗号:			";
+            break;
+        default:
+            text = "未知 Token: 	";
+            break;
+    }
+    text += value;
+    return text;
+}
+
 bool check_isalpha(char c) {
     // 检查字符是否是大写字母
     if (c >= 'A' && c <= 'Z') {

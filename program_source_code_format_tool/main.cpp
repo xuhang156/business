@@ -5,41 +5,32 @@
 #include "easyx.h"
 #include "graphics.h" 
 #include "ui_files/mainWindow.h"
+#include "data_structure/lexerInfo.h"
 
 //int main()
 //{
-//    UiComponentConfig config;
-//    config.handle = OpenFileDialog;
-//
-//    int data = 42;
-//    config.handle(&data);  // µ÷ÓÃº¯Êý
-//
-//    return 0;
-//}
-
-//int main()
-//{
-//    MyList<int> myList;
-//    myList.insert(10);
-//    myList.insert(20);
-//    myList.insert(30);
-//
-//    std::cout << "List after insertions: ";
-//    myList.display();
-//
-//    myList.remove(20);
-//    std::cout << "List after removal of 20: ";
-//    myList.display();
-//
+//	
+//	initKeywords();
+//	initOperators();
+//	std::string test = "int main() { int a = 5; float b = 3.14; if (a == 5) return b; }";
+//	Lexer er(test);
+//	auto tokens = er.tokenize();
+//	tokens.display();
+//	
+//	_getch();
 //    return 0;
 //}
 
 
-//
+
+
 using namespace std;
 int main()
 {
-	MainWindow* window = new MainWindow("Test Window",1000,700);
+	initOperators();
+	initKeywords();
+
+	MainWindow* window = new MainWindow("Test Window",1920,1080);
 	
     while (true)
     {
