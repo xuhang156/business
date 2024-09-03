@@ -7,10 +7,12 @@
 #include <easyx.h>
 #include <windows.h>
 #include "../data_structure/MyList.h"
+
 using namespace std;
 
-class IWindow;
-typedef void (IWindow::*EventHandle)(void *);
+class MainWindow;
+class OperationButtionWindow;
+typedef void (MainWindow::*EventHandle)(void *);
 
 //调用window底层的对话框来选择一个c++文件，目前主要过滤有.h、.cpp、.c三种类型文件 
 std::string OpenFileDialog(void*); 
@@ -23,22 +25,24 @@ struct UiComponentConfig
 {
 	RECT rect;
 	EventHandle handle;
+	
+   // 重载 == 运算符
+    bool operator==(const UiComponentConfig& other) const
+    {
+        return (rect.left == other.rect.left && rect.bottom == other.rect.bottom && rect.right == other.rect.right && rect.top == other.rect.top); 
+    }
+	// 重载 != 运算符
+    bool operator!=(const UiComponentConfig& other) const
+    {
+        return (rect.left != other.rect.left || rect.bottom != other.rect.bottom || rect.right != other.rect.right || rect.top != other.rect.top); 
+    }
 }; 
 
-class IWindow
+class MainWindow
 {
 public:
-    IWindow(const std::string& title, int width, int height)
-        : title(title), width(width), height(height)
-    {
-        initgraph(width, height);
-        HWND hwnd = GetHWnd();  // 获取窗口句柄
-        SetWindowText(hwnd, title.c_str());
-        createSelectFileButton();
-        createMsgText("点击按钮选择文件");
-//        floodfill(0, 0, WHITE);
-    }
-
+	MainWindow(const std::string& title, int width, int height);
+	~MainWindow();
 	//鼠标时间处理函数 
 	void runEvent(const MOUSEMSG& msg)
 	{
@@ -57,6 +61,21 @@ public:
 		    }
         }	
 	}
+	 
+	void doBack(void*)
+	{
+		cout<<" Need back"<<endl;
+	}
+	
+	int getWidth() const
+	{
+		return width;
+	}
+	
+	int getHeight() const
+	{
+		return height;
+	}
 	
 	void createMsgText(const std::string& msg)
 	{
@@ -70,16 +89,28 @@ public:
 	    drawtext(msg.c_str(), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
 	
-	void selectFile(void*)
-	{
-		std::string text = "当前选择的文件为："; 
-		std::string filePath = OpenFileDialog(NULL);
-		createMsgText(text + filePath);	
-	}
+	void selectFile(void*);
 	
 	bool isPointInRect(int x, int y, RECT rect)
 	{
 	    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+	}
+	
+	//添加子类中的按钮配置，所有按钮处理函数目前都是在这个类中实现的 
+	void addSubclassButton(UiComponentConfig& config)
+	{
+		components.insert(config);
+	}
+	
+	void hideSelectFileButton()
+	{
+		components.remove(selectFileButton);
+		setfillcolor(BLACK);
+	    fillrectangle(selectFileButton.rect.left, selectFileButton.rect.top, selectFileButton.rect.right, selectFileButton.rect.bottom);
+	    // 设置边框颜色
+    	setlinecolor(BLACK);
+    	rectangle(selectFileButton.rect.left, selectFileButton.rect.top, selectFileButton.rect.right, selectFileButton.rect.bottom);
+	    cout<<"隐藏主界面上的选择文件按钮"<<endl;
 	}
 	
 	void createSelectFileButton()
@@ -103,29 +134,17 @@ public:
 	    setbkmode(TRANSPARENT);
 	    RECT r = { x, y, x + buttonWidth, y + buttonHeight };
 	    drawtext(text.c_str(), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-	    UiComponentConfig buttonConfig;
-	    buttonConfig.rect = r;
-	    buttonConfig.handle = &IWindow::selectFile;
-	    components.insert(buttonConfig);
+	    selectFileButton.rect = r;
+	    selectFileButton.handle = &MainWindow::selectFile;
+	    components.insert(selectFileButton);
 	}
-	
-    ~IWindow()
-    {
-        closegraph();  // 关闭窗口
-    }
 
-//    void move()
-//    {
-//        int screenWidth = GetSystemMetrics(SM_CXSCREEN);  // 获取屏幕宽度
-//        int screenHeight = GetSystemMetrics(SM_CYSCREEN);  // 获取屏幕高度
-//        int x = (screenWidth - width) / 2;  // 计算窗口的X坐标，使窗口居中
-//        int y = (screenHeight - height) / 2;  // 计算窗口的Y坐标，使窗口居中
-//        SetWindowPos(*hwnd, NULL, x, y, width, height, SWP_NOMOVE | SWP_NOZORDER);  // 设置窗口位置和大小
-//    }
 
 private:
     std::string title;
     int width;
     int height;
     MyList<UiComponentConfig> components;
+    UiComponentConfig selectFileButton;
+    OperationButtionWindow* operationButtons;
 };

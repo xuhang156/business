@@ -1,11 +1,39 @@
 #include "mainWindow.h"
+#include "operationButtonWindow.h"
 
+MainWindow::MainWindow(const std::string& title, int width, int height): title(title), width(width), height(height)
+{
+    initgraph(width, height);
+    HWND hwnd = GetHWnd();  // 获取窗口句柄
+    SetWindowText(hwnd, title.c_str());
+    createSelectFileButton();
+    createMsgText("点击按钮选择文件");
+    
+    operationButtons = new OperationButtionWindow(this);
+    
+//        floodfill(0, 0, WHITE);
+}
 
-//MainWindow::MainWindow(const std::string& titles):IWindow(titles)
-//{
-//	
-//}
-//
+MainWindow::~MainWindow()
+{
+    closegraph();  // 关闭窗口
+    delete operationButtons;
+}
+
+void MainWindow::selectFile(void*)
+{
+	static bool hadCreateButton = false;
+	std::string text = "当前选择的文件为："; 
+	std::string filePath = OpenFileDialog(NULL);
+	createMsgText(text + filePath);	
+	if(filePath != "" && !hadCreateButton)
+	{
+		operationButtons->create();
+		hadCreateButton = true;
+		hideSelectFileButton();
+	}
+}
+
 //MainWindow::~MainWindow()
 //{
 //	

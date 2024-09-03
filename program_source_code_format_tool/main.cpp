@@ -39,7 +39,7 @@
 using namespace std;
 int main()
 {
-	IWindow* window = new IWindow("Test Window",900,700);
+	MainWindow* window = new MainWindow("Test Window",900,700);
 	
     while (true)
     {
