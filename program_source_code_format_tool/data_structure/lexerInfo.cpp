@@ -142,7 +142,6 @@ std::string Token::description()
             text = "δ֪ Token: 	";
             break;
     }
-    text += value;
     return text;
 }
 

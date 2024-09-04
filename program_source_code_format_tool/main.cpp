@@ -1,4 +1,6 @@
 #include <iostream>
+#include <memory>
+#include <vector>
 #include <conio.h>  // 包含getch函数
 #include <windows.h>
 #include <commdlg.h>  //
@@ -6,27 +8,48 @@
 #include "graphics.h" 
 #include "ui_files/mainWindow.h"
 #include "data_structure/lexerInfo.h"
+#include "data_structure/parserInfo.h"
 
 //int main()
 //{
-//	
-//	initKeywords();
-//	initOperators();
-//	std::string test = "int main() { int a = 5; float b = 3.14; if (a == 5) return b; }";
-//	Lexer er(test);
-//	auto tokens = er.tokenize();
-//	tokens.display();
-//	
+//    std::vector<Token> tokenVector = {
+//        Token("add", IDENT), Token("(", LP), Token("x", IDENT), Token(",", COMMA), Token("y", IDENT), Token(")", RP), Token(";", SEMI),
+//        Token("int", IDENT), Token("x", IDENT), Token("=", ASSIGN), Token("2", INT_CONST), Token(";", SEMI),
+//        Token("", END_OF_FILE)
+//    };
+//
+//    // 将 std::vector 转换为 MyList
+//    MyList<Token> tokens;
+//    for (const auto& token : tokenVector) {
+//        tokens.insert(token);
+//    }
+//    
+//    Parser parser(tokens);
+//    try {
+//        std::shared_ptr<ASTNode> ast = parser.parse();
+//        std::cout << "Parsing completed successfully!" << std::endl;
+//    }
+//    catch (const std::exception& e) {
+//        std::cerr << "Parsing failed: " << e.what() << std::endl;
+//    }
+//    
 //	_getch();
 //    return 0;
 //}
-
-
-
-
+//
 using namespace std;
 int main()
 {
+    std::unique_ptr<int> values[10];
+    for (int i = 0; i < 10; ++i) {
+        values[i] = std::unique_ptr<int>(new int(i));  // 创建一个指向整数的 unique_ptr
+    }
+
+    for (int i = 0; i < 10; ++i) {
+        std::cout << *values[i] << " ";  // 打印每个 unique_ptr 指向的值
+    }
+		
+				
 	initOperators();
 	initKeywords();
 

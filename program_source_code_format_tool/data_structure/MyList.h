@@ -4,6 +4,7 @@
 #include <string>
 #include <functional>
 
+using namespace std;
 /*
 	初步实现List结构：支持insert remove find函数 
 	
@@ -37,6 +38,22 @@ public:
         }
     }
 	
+    T at(int i) {
+        if (i < 0) {
+            throw std::out_of_range("Index must be non-negative.");
+        }
+        Node* current = head;
+        int index = 0;
+        while (current != nullptr) {
+            if (index == i) {
+                return current->data;
+            }
+            current = current->next;
+            ++index;
+        }
+        throw std::out_of_range("Index is out of range.");
+    }
+
     void insert(T value) {
         Node* newNode = new Node(value);
         if (head == NULL) {

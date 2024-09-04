@@ -3,7 +3,7 @@
 
 #include "mainWindow.h"
 #include "operationButtonWindow.h"
-#include "../data_structure/lexerInfo.h"
+#include "../data_structure/parserInfo.h" 
 
 MainWindow::MainWindow(const std::string& title, int width, int height): title(title), width(width), height(height)
 {
@@ -71,10 +71,13 @@ void MainWindow::lexer(void *)
 		int lineHeight = 15;
 		cout<<"获取此分析："<<node->data.description();
 		outtextxy(10, i * lineHeight, node->data.description().c_str());
+		outtextxy(200, i * lineHeight, node->data.value.c_str());
 		i++;
 		node = node->next;  // 移动到下一个节点
 	}
 	cout<<"分析结束:"<<i <<endl; 
+	Parser parser(tokens);
+	
 }
 
 void MainWindow::showCode(const std::string& filePath)
