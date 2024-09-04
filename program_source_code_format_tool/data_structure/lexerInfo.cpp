@@ -1,6 +1,4 @@
 #include "lexerInfo.h"
-using namespace std;
-int num = 1;
 
 MyList<Token> operators;
 MyList<Token> keywords;
@@ -187,6 +185,8 @@ void initOperators()
     operators.insert({"<=", COMPARISON});
     operators.insert({"==", COMPARISON});
     operators.insert({"!=", COMPARISON});
+    operators.insert({">", COMPARISON});
+    operators.insert({"<", COMPARISON});
     operators.insert({"&&", AND});
     operators.insert({"||", OR});
     operators.insert({"(", LP});

@@ -1,8 +1,6 @@
 #pragma once
-
-#include <iostream>
 #include "MyList.h" 
-using namespace std;
+
 enum TokenType
 {
     ERROR_TOKEN,
@@ -68,7 +66,7 @@ enum TokenType
     MULTIPLY,   //"*"
     DIVIDE, 	//"/" 
     MOD, 		//"%" 
-    COMPARISON,  // "比较运算符： >= != <= ==等"
+    COMPARISON,  // "比较运算符： >= != <= == < >等"
     AND,     
     OR, 
     LP, 		//左括号"(" 
@@ -78,9 +76,9 @@ enum TokenType
     LBS, 		//"{"
     RBS, 		//"}"
     SEMI, 		//";" 
-    COMMA		//","
+    COMMA,		//","
+    END_OF_FILE	//
 };
-
 
 // 词法单元
 struct Token
@@ -88,6 +86,9 @@ struct Token
 	std::string value;
     enum TokenType type;
     std::string description();
+    
+    Token() : value(""), type(ERROR_TOKEN) {}
+    Token(const std::string& val,enum TokenType t) : value(val), type(t) {}
 };
 
 std::ostream& operator<<(std::ostream& os, const Token& token);
@@ -196,28 +197,39 @@ private:
         return { value, INT_CONST };
     }
 
+	//c/c++中的操作符最多两位，因此需要检测两次
+	//第一次去第一个字符，判断是否是操作符
+	//第二次取第一个和第二个合并的字符，再次判断
+	//三种情况：
+	//    1        2 
+	//    成功    失败   
+	//    成功    成功
+	//    失败    成功  如：!=
     Token operatorToken() {
         std::string value(1, src[index]);
-        
-        bool needStop = false;
-		 
-        std::string canReturnChars = "{}[]();,";
-        if (index + 1 < src.size() && canReturnChars.find(src[index]) == std::string::npos && src[++index] != ' ') {
-            value += src[++index];
-        }
+        std::string  withTheNextValue = value;
+        if(index + 1 < src.size())
+			withTheNextValue += src[index + 1];
+    
         ++index;
-   	    Token token = {value,ERROR_TOKEN };
-	    MyList<Token>::Node* node = operators.beginNode();  // 从头部节点开始
-		while (node != NULL) {
-			bool same = node->data.value == value;
-			if(node->data.value == value)
-			{
-				token.type = node->data.type;
-				cout<<"获取到操作符："<<token<<endl;
-				return token;
-			}	
-			node = node->next;  // 移动到下一个节点
-		}
+   	    Token token = {withTheNextValue,ERROR_TOKEN };
+        for (auto* node = operators.beginNode(); node != NULL; node = node->next) {
+            if(node->data.value == withTheNextValue)
+            {
+            	token.type = node->data.type;
+            	++index;
+            	return token;
+			}
+        }
+        
+        for (auto* node = operators.beginNode(); node != NULL; node = node->next) {
+            if(node->data.value == value)
+            {
+            	token.type = node->data.type;
+            	token.value = value;
+            	return token;
+			}
+        }
 		cout<<"没有检测到操作符："<< value<<endl; 
 		return token;
     }
