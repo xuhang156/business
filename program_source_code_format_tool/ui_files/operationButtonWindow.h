@@ -91,7 +91,7 @@ public:
 	    RECT buttonBorder = createButton("Óï·¨·ÖÎö");
 	    UiComponentConfig buttonConfig;
 	    buttonConfig.rect = buttonBorder;
-	    buttonConfig.handle = &MainWindow::doBack;
+	    buttonConfig.handle = &MainWindow::parser;
 	    parent->addSubclassButton(buttonConfig);
 	}
 	

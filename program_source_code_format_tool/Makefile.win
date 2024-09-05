@@ -4,8 +4,8 @@
 CPP      = g++.exe -D__DEBUG__
 CC       = gcc.exe -D__DEBUG__
 WINDRES  = windres.exe
-OBJ      = main.o ui_files/mainWindow.o data_structure/MyList.o data_structure/lexerInfo.o
-LINKOBJ  = main.o ui_files/mainWindow.o data_structure/MyList.o data_structure/lexerInfo.o
+OBJ      = main.o ui_files/mainWindow.o data_structure/MyList.o data_structure/lexerInfo.o data_structure/astTree.o data_structure/parserInfo.o
+LINKOBJ  = main.o ui_files/mainWindow.o data_structure/MyList.o data_structure/lexerInfo.o data_structure/astTree.o data_structure/parserInfo.o
 LIBS     = -L"D:/Dev-Cpp/MinGW64/lib" -L"D:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -leasyx -lgdi32 -lole32 -lcomdlg32 -g3
 INCS     = -I"D:/Dev-Cpp/MinGW64/include" -I"D:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"D:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
 CXXINCS  = -I"D:/Dev-Cpp/MinGW64/include" -I"D:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"D:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"D:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
@@ -35,3 +35,9 @@ data_structure/MyList.o: data_structure/MyList.cpp
 
 data_structure/lexerInfo.o: data_structure/lexerInfo.cpp
 	$(CPP) -c data_structure/lexerInfo.cpp -o data_structure/lexerInfo.o $(CXXFLAGS)
+
+data_structure/astTree.o: data_structure/astTree.cpp
+	$(CPP) -c data_structure/astTree.cpp -o data_structure/astTree.o $(CXXFLAGS)
+
+data_structure/parserInfo.o: data_structure/parserInfo.cpp
+	$(CPP) -c data_structure/parserInfo.cpp -o data_structure/parserInfo.o $(CXXFLAGS)

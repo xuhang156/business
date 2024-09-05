@@ -95,6 +95,7 @@ public:
 	
 	void selectFile(void*);
 	void lexer(void *);	//词法分析按钮处理函数 
+	void parser(void *); 
 	void clearMainPlotArea();
 	bool isPointInRect(int x, int y, RECT rect)
 	{

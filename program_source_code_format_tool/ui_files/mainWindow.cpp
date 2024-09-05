@@ -80,6 +80,180 @@ void MainWindow::lexer(void *)
 	
 }
 
+void MainWindow::parser(void *)
+{
+	cout<<"语法分析程序"; 
+	if(fileStringData == "")
+		return;
+
+	Lexer er(fileStringData);
+	auto tokens = er.tokenize();
+	Token token = {"结束",END_OF_FILE};
+	tokens.insert(token);
+	Parser parser(tokens);
+	
+	try {
+        std::shared_ptr<ASTNode> ast = parser.parse();
+        clearMainPlotArea();
+        
+        printAST(ast.get());
+        std::cout << "Parsing completed successfully!" << std::endl;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Parsing failed: " << e.what() << std::endl;
+    }
+	cout<<"分析结束:"<<endl; 	
+}
+
+void showTree(bool clear,const std::string& text,int leftAdd = 10)
+{
+	static int index = 0;
+	if(clear)
+		index = 0;
+	int lineHeight = 15;
+    outtextxy(leftAdd, index * lineHeight,text.c_str());
+    index++; 
+}
+
+void printAST(ASTNode* node, int indent){
+	int margin = 30;
+    if (!node) return;
+	string text = "";
+    // 用于打印缩进
+    auto printIndent = [indent]() {
+        for (int i = 0; i < indent; ++i) {
+            std::cout << "  ";  // 每个缩进单位为两个空格
+        }
+    };
+    
+    std::string str = node->description();
+    std::string token;
+    for (char ch : str) {
+        if (ch == '\n') {
+            if (!token.empty()) 
+			{
+            	showTree(false,token,0);
+                token.clear();
+            }
+        } 
+		else 
+            token += ch;
+    }
+    if (!token.empty())
+        showTree(false,token,0);
+    return;
+    // 判断节点类型并输出对应的信息
+    if (auto constantNode = dynamic_cast<ConstantNode*>(node)) {
+        printIndent();
+        std::string text = "常量节点: " + std::to_string(constantNode->value);
+        showTree(false,text,indent*margin);
+        std::cout << "常量节点: " << constantNode->value << std::endl;
+    }
+    else if (auto variableNode = dynamic_cast<VariableNode*>(node)) {
+        printIndent();
+        std::string text = "变量节点: " + variableNode->name;
+        showTree(false,text,indent*margin);
+        std::cout << "变量节点: " << variableNode->name << std::endl;
+    }
+    else if (auto operatorNode = dynamic_cast<OperatorNode*>(node)) {
+        printIndent();
+    	string text = "操作符节点:  ";
+        for (auto* node = operators.beginNode(); node != nullptr; node = node->next) {
+            if(node->data.type == operatorNode->op)
+            	text += node->data.value;
+        }
+        printIndent();
+        showTree(false,text,indent*margin);
+        showTree(false,"左操作数:",indent*margin);
+        printAST(operatorNode->left.get(), indent + 1);
+        printIndent();
+        showTree(false,"右操作数:",indent*margin);
+        std::cout << "右操作数:" << std::endl;
+        printAST(operatorNode->right.get(), indent + 1);
+    }
+    else if (auto functionCallNode = dynamic_cast<FunctionCallNode*>(node)) {
+        printIndent();
+        string text = "函数调用节点: " + functionCallNode->functionName;
+        std::cout << "函数调用节点: " << functionCallNode->functionName << std::endl;
+        showTree(false,text,indent*margin);
+        for (auto* argNode = functionCallNode->arguments.beginNode(); argNode != nullptr; argNode = argNode->next) {
+            printAST(argNode->data.get(), indent + 1);
+        }
+    }
+    else if (auto assignmentNode = dynamic_cast<AssignmentNode*>(node)) {
+        printIndent();
+        std::cout << "赋值节点: " << assignmentNode->varName << std::endl;
+        text = "赋值节点: " + assignmentNode->varName;
+        showTree(false,text,indent*margin);
+        printIndent();
+        std::cout << "值:" << std::endl;
+        showTree(false,"值:" ,indent*margin);
+        printAST(assignmentNode->value.get(), indent + 1);
+    }
+    else if (auto returnNode = dynamic_cast<ReturnStatementNode*>(node)) {
+        printIndent();
+        std::cout << "返回语句节点:" << std::endl;
+        showTree(false,"返回语句节点:",indent*margin);
+        printAST(returnNode->returnValue.get(), indent + 1);
+    }
+    else if (auto compoundStmtNode = dynamic_cast<CompoundStatementNode*>(node)) {
+        printIndent();
+        std::cout << "复合语句节点:" << std::endl;
+        showTree(false,"复合语句节点:",indent*margin);
+        for (auto* stmtNode = compoundStmtNode->statements.beginNode(); stmtNode != nullptr; stmtNode = stmtNode->next) {
+            printAST(stmtNode->data.get(), indent + 1);
+        }
+    }
+    else if (auto functionDefNode = dynamic_cast<FunctionDefinitionNode*>(node)) {
+        printIndent();
+        text = "函数定义节点:" + functionDefNode->functionName + "返回类型: " + functionDefNode->returnType;
+        showTree(false,text,indent * 10);
+        std::cout << "函数定义节点: " << functionDefNode->functionName << " 返回类型: " << functionDefNode->returnType << std::endl;
+        printIndent();
+        std::cout << "参数: ";
+        showTree(false,"参数: ",indent * 10);
+        for (auto* paramNode = functionDefNode->parameters.beginNode(); paramNode != nullptr; paramNode = paramNode->next) {
+            std::cout << paramNode->data << " ";
+            showTree(false,paramNode->data,indent * 10);
+        }
+        std::cout << std::endl;
+        printIndent();
+        std::cout << "函数体:" << std::endl;
+        showTree(false,"函数体:",indent * 10);
+        printAST(functionDefNode->body.get(), indent + 1);
+    }
+    else if (auto ifNode = dynamic_cast<IfNode*>(node)) {
+        printIndent();
+        std::cout << "条件语句节点:" << std::endl;
+        showTree(false,"条件语句节点:",indent * 10);
+        printIndent();
+        showTree(false,"条件:",indent * 10);
+        std::cout << "条件:" << std::endl;
+        printAST(ifNode->condition.get(), indent + 1);
+        printIndent();
+        showTree(false,"执行分支:",indent * 10);
+        std::cout << "执行分支:" << std::endl;
+        printAST(ifNode->thenBranch.get(), indent + 1);
+        if (ifNode->elseBranch) {
+            printIndent();
+            showTree(false,"否则分支:",indent * 10);
+            std::cout << "否则分支:" << std::endl;
+            printAST(ifNode->elseBranch.get(), indent + 1);
+        }
+    }
+    else if (auto exprStmtNode = dynamic_cast<ExpressionStatementNode*>(node)) {
+        printIndent();
+        showTree(false,"达式语句节点:",indent * 10);
+        std::cout << "表达式语句节点:" << std::endl;
+        printAST(exprStmtNode->expression.get(), indent + 1);
+    }
+    else {
+        printIndent();
+        showTree(false,"未知的AST节点",indent * 10);
+        std::cout << "未知的AST节点" << std::endl;
+    }
+}
+
 void MainWindow::showCode(const std::string& filePath)
 {
 	fileStringData = "";

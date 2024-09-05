@@ -95,6 +95,7 @@ std::ostream& operator<<(std::ostream& os, const Token& token);
 extern MyList<Token> keywords;
 extern MyList<Token> operators;
 
+
 bool check_isalpha(char c);
 bool isOperator(char value); 
 void initOperators();
