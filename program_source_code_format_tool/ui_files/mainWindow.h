@@ -87,7 +87,6 @@ public:
 		setfillcolor(LIGHTGRAY);
 	    fillrectangle(0,msgAreaTop, width, height);
 	    
-//	    setbkmode(TRANSPARENT);
 	    setfillcolor(LIGHTGRAY);
 	    RECT r = {0, msgAreaTop, width, height};
 	    drawtext(msg.c_str(), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
@@ -96,6 +95,7 @@ public:
 	void selectFile(void*);
 	void lexer(void *);	//词法分析按钮处理函数 
 	void parser(void *); 
+	void format(void *); //格式化函数 
 	void clearMainPlotArea();
 	bool isPointInRect(int x, int y, RECT rect)
 	{

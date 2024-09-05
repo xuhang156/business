@@ -4,11 +4,23 @@
 
 class OperationButtionWindow
 {
+private:
+	int x;					//整个按钮绘制区域的左上角x 
+	int y;					//整个按钮绘制区域的左上角y 
+	int height;
+	int width;
+	
+	int buttonHeight;   	//按钮的高度 
+	int buttonCount;		//保存当前按钮的数量 
+	int buttonPaddingLeft;  //保存按钮离绘制区域的左侧边距 
+	int buttonPaddingTop;	//保存按钮离绘制区域的顶部边距 
+	MainWindow* parent = NULL;
+	
 public:
     OperationButtionWindow(MainWindow* parent):parent(parent)
     {
     	y = 0;
-    	width = 100;
+    	width = 100;			
     	buttonPaddingLeft = 10;
     	buttonPaddingTop = 30;
     	buttonCount = 0;
@@ -43,11 +55,6 @@ public:
 		x = parent->getWidth() - 100;
 		height = parent->getHeight() - 70;
 	    fillrectangle(x, y, parent->getWidth(), height);
-	    
-//	    setbkmode(TRANSPARENT);
-//	    setfillcolor(LIGHTGRAY);
-//	    RECT r = {0, height - 70, width, height};
-//	    drawtext(msg.c_str(), &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
 	
 	//创建按钮，并返回按钮的边界区域 
@@ -85,7 +92,8 @@ public:
 	    buttonCount = buttonCount +1;
 	    return buttonBorder;
 	}	
-	//创建语法分析器的按钮 
+	//创建语法分析器的按钮
+	//绑定 MainWindow::parser函数 
 	void createParserButton()
 	{
 	    RECT buttonBorder = createButton("语法分析");
@@ -111,7 +119,7 @@ public:
 	    RECT buttonBorder = createButton("格式化");
 	    UiComponentConfig buttonConfig;
 	    buttonConfig.rect = buttonBorder;
-	    buttonConfig.handle = &MainWindow::doBack;
+	    buttonConfig.handle = &MainWindow::format;
 	    parent->addSubclassButton(buttonConfig);
 	}
 
@@ -124,16 +132,4 @@ public:
 	    buttonConfig.handle = &MainWindow::selectFile;
 	    parent->addSubclassButton(buttonConfig);
 	}
-	
-private:
-	int x;
-	int y;
-	int height;
-	int width;
-	
-	int buttonHeight;   	//按钮的高度 
-	int buttonCount;		//保存当前按钮的数量 
-	int buttonPaddingLeft;  //保存按钮离绘制区域的左侧边距 
-	int buttonPaddingTop;	//保存按钮离绘制区域的顶部边距 
-	MainWindow* parent = NULL;
 };

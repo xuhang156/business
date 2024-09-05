@@ -29,7 +29,7 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=1
 CompilerSettings=0000000000000000001000000
-UnitCount=12
+UnitCount=10
 
 [VersionInfo]
 Major=1
@@ -80,27 +80,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit4]
-FileName=data_structure\MyList.cpp
-CompileCpp=1
-Folder=data_structure
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit5]
-FileName=data_structure\MyList.h
-CompileCpp=1
-Folder=data_structure
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit6]
 FileName=ui_files\operationButtonWindow.h
 CompileCpp=1
 Folder=ui_files
@@ -110,7 +90,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit6]
 FileName=data_structure\lexerInfo.h
 CompileCpp=1
 Folder=data_structure
@@ -120,7 +100,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
+[Unit7]
 FileName=data_structure\lexerInfo.cpp
 CompileCpp=1
 Folder=data_structure
@@ -130,17 +110,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
-FileName=data_structure\astTree.cpp
-CompileCpp=1
-Folder=data_structure
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit9]
+[Unit8]
 FileName=data_structure\astTree.h
 CompileCpp=1
 Folder=data_structure
@@ -150,8 +120,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
+[Unit9]
 FileName=data_structure\parserInfo.h
+CompileCpp=1
+Folder=data_structure
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
+FileName=data_structure\parserInfo.cpp
 CompileCpp=1
 Folder=data_structure
 Compile=1
@@ -162,6 +142,26 @@ BuildCmd=
 
 [Unit12]
 FileName=data_structure\parserInfo.cpp
+CompileCpp=1
+Folder=data_structure
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit10]
+FileName=data_structure\parserInfo.cpp
+CompileCpp=1
+Folder=data_structure
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit4]
+FileName=data_structure\MyList.h
 CompileCpp=1
 Folder=data_structure
 Compile=1

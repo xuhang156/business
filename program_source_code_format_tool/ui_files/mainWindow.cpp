@@ -1,9 +1,20 @@
 
 #include <fstream>
-
 #include "mainWindow.h"
+#include <sstream>
 #include "operationButtonWindow.h"
 #include "../data_structure/parserInfo.h" 
+
+void showTree(bool clear,const std::string& text,int leftAdd = 10)
+{
+	static int index = 0;
+	if(clear)
+		index = 0;
+	int lineHeight = 15;
+    outtextxy(leftAdd, index * lineHeight,text.c_str());
+    index++; 
+}
+
 
 MainWindow::MainWindow(const std::string& title, int width, int height): title(title), width(width), height(height)
 {
@@ -15,8 +26,6 @@ MainWindow::MainWindow(const std::string& title, int width, int height): title(t
     createMsgText("点击按钮选择文件");
     
     operationButtons = new OperationButtionWindow(this);
-    
-//        floodfill(0, 0, WHITE);
 }
 
 MainWindow::~MainWindow()
@@ -85,7 +94,7 @@ void MainWindow::parser(void *)
 	cout<<"语法分析程序"; 
 	if(fileStringData == "")
 		return;
-
+	showTree(true,""); 
 	Lexer er(fileStringData);
 	auto tokens = er.tokenize();
 	Token token = {"结束",END_OF_FILE};
@@ -97,24 +106,63 @@ void MainWindow::parser(void *)
         clearMainPlotArea();
         
         printAST(ast.get());
-        std::cout << "Parsing completed successfully!" << std::endl;
+        createMsgText("语法分析成功。 "); 
     }
     catch (const std::exception& e) {
-        std::cerr << "Parsing failed: " << e.what() << std::endl;
+        createMsgText("语法分析失败。"); 
     }
 	cout<<"分析结束:"<<endl; 	
 }
 
-void showTree(bool clear,const std::string& text,int leftAdd = 10)
-{
-	static int index = 0;
-	if(clear)
-		index = 0;
-	int lineHeight = 15;
-    outtextxy(leftAdd, index * lineHeight,text.c_str());
-    index++; 
+//easyX绘制文字函数，主要用于格式化功能，
+//easyX遇到换行符、空格不会绘制，因此重写绘制逻辑，能够支持换行符和空格 
+void drawTextWithNewlines(const std::ostringstream& oss, int x, int y, int lineHeight = 20) {
+    std::string text = oss.str();  // 获取 ostringstream 中的字符串
+    std::string line;
+    int currentY = y;
+
+    for (char ch : text) {
+        if (ch == '\n') {
+            outtextxy(x, currentY, line.c_str());  // 绘制当前行
+            currentY += lineHeight;  // 移动到下一行
+            line.clear();  // 清空当前行的内容
+        } else {
+            line += ch;  // 添加字符到当前行
+        }
+    }
+
+    if (!line.empty()) {
+        outtextxy(x, currentY, line.c_str());  // 绘制最后一行（如果有的话）
+    }
 }
 
+void MainWindow::format(void *)
+{
+	if(fileStringData == "")
+		return;
+
+	Lexer er(fileStringData);
+	auto tokens = er.tokenize();
+	Token token = {"结束",END_OF_FILE};
+	tokens.insert(token);
+	Parser parser(tokens);
+
+	try {
+        std::shared_ptr<ASTNode> ast = parser.parse();
+        clearMainPlotArea();
+        std::ostringstream oss;
+        
+        ast-> format(oss);
+        drawTextWithNewlines(oss,20,20);
+    }
+    catch (const std::exception& e) {
+    	createMsgText("格式化错误。"); 
+        std::cerr << "Parsing failed: " << e.what() << std::endl;
+    }
+	cout<<"分析结束:"<<endl; 
+}
+
+//用于打印语法树 
 void printAST(ASTNode* node, int indent){
 	int margin = 30;
     if (!node) return;
@@ -274,11 +322,6 @@ void MainWindow::showCode(const std::string& filePath)
 	}
 }
 
-//MainWindow::~MainWindow()
-//{
-//	
-//}
-
 MyList<std::string> readFile(const std::string& filePath) {
     std::ifstream file(filePath.c_str());
     MyList<std::string> lines;
@@ -296,6 +339,7 @@ MyList<std::string> readFile(const std::string& filePath) {
     return lines;
 }
 
+//调用window的对话框功能，支持选择文件 
 std::string OpenFileDialog(void*) {
     // 创建一个结构体来保存文件选择对话框的信息
     OPENFILENAME ofn;       		// 文件选择对话框结构体
